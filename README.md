@@ -7,7 +7,7 @@ This project uses some code from the ReEntryUDP example project @ https://github
 This project uses some code and assets from the CMC-Ex project @ https://github.com/DevLAN-org/CMC-Ex</br>
 
 Key features:
-- works for both CM and LM (the app will always show the active DSKY)
+- works for both CM and LM (the app will always show the active DSKY, annunciator layout will vary according)
 - touch input friendly
 - stand-alone executable, no need to install .NET Framework 8.0
 
