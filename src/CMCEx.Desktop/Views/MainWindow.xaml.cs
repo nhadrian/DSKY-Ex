@@ -25,7 +25,6 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
         private bool _isAdjustingSize;
         private bool _isInResizeMove;
         private bool _ignoreNextSizeChanged;
-
         private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNameCaseInsensitive = true
@@ -209,7 +208,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
         }
 
         // Window drag movement
-                private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton != MouseButton.Left)
                 return;
@@ -246,6 +245,10 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
 
             UpdateJsonReaderPowerIcon();
 
+
+            // Refresh digits/annunciators visibility immediately.
+            UpdateStoredValues();
+
             // Prime one read immediately so the icon can switch to ON as soon as
             // we confirm the json files are reachable.
             if (_readerRunning)
@@ -253,7 +256,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
         }
 
 
-                private void LoadClickSoundResource()
+        private void LoadClickSoundResource()
         {
             try
             {
@@ -365,7 +368,8 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
                     {
                         _jsonAccessible = false;
                         Dispatcher.Invoke(UpdateJsonReaderPowerIcon);
-                    }
+                                            Dispatcher.Invoke(UpdateStoredValues);
+}
                     return;
                 }
 
@@ -505,6 +509,11 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             return agcValues;
         }
 
+        private static string BlankToSpace(string? s)
+        {
+            return string.IsNullOrEmpty(s) ? " " : s;
+        }
+
         private static void CopyToStorage(CMCValues v)
         {
             CMCStorage.IsInCM = v.IsInCM;
@@ -516,26 +525,26 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             CMCStorage.ProgramD1 = v.ProgramD1;
             CMCStorage.ProgramD2 = v.ProgramD2;
 
-            CMCStorage.Register1D1 = v.Register1D1;
-            CMCStorage.Register1D2 = v.Register1D2;
-            CMCStorage.Register1D3 = string.IsNullOrEmpty(v.Register1D3) ? " " : v.Register1D3;
-            CMCStorage.Register1D4 = v.Register1D4;
-            CMCStorage.Register1D5 = v.Register1D5;
-            CMCStorage.Register1Sign = v.Register1Sign;
+            CMCStorage.Register1D1 = BlankToSpace(v.Register1D1);
+            CMCStorage.Register1D2 = BlankToSpace(v.Register1D2);
+            CMCStorage.Register1D3 = BlankToSpace(v.Register1D3);
+            CMCStorage.Register1D4 = BlankToSpace(v.Register1D4);
+            CMCStorage.Register1D5 = BlankToSpace(v.Register1D5);
+            CMCStorage.Register1Sign = BlankToSpace(v.Register1Sign);
 
-            CMCStorage.Register2D1 = v.Register2D1;
-            CMCStorage.Register2D2 = v.Register2D2;
-            CMCStorage.Register2D3 = string.IsNullOrEmpty(v.Register2D3) ? " " : v.Register2D3;
-            CMCStorage.Register2D4 = v.Register2D4;
-            CMCStorage.Register2D5 = v.Register2D5;
-            CMCStorage.Register2Sign = v.Register2Sign;
+            CMCStorage.Register2D1 = BlankToSpace(v.Register2D1);
+            CMCStorage.Register2D2 = BlankToSpace(v.Register2D2);
+            CMCStorage.Register2D3 = BlankToSpace(v.Register2D3);
+            CMCStorage.Register2D4 = BlankToSpace(v.Register2D4);
+            CMCStorage.Register2D5 = BlankToSpace(v.Register2D5);
+            CMCStorage.Register2Sign = BlankToSpace(v.Register2Sign);
 
-            CMCStorage.Register3D1 = v.Register3D1;
-            CMCStorage.Register3D2 = v.Register3D2;
-            CMCStorage.Register3D3 = string.IsNullOrEmpty(v.Register3D3) ? " " : v.Register3D3;
-            CMCStorage.Register3D4 = v.Register3D4;
-            CMCStorage.Register3D5 = v.Register3D5;
-            CMCStorage.Register3Sign = v.Register3Sign;
+            CMCStorage.Register3D1 = BlankToSpace(v.Register3D1);
+            CMCStorage.Register3D2 = BlankToSpace(v.Register3D2);
+            CMCStorage.Register3D3 = BlankToSpace(v.Register3D3);
+            CMCStorage.Register3D4 = BlankToSpace(v.Register3D4);
+            CMCStorage.Register3D5 = BlankToSpace(v.Register3D5);
+            CMCStorage.Register3Sign = BlankToSpace(v.Register3Sign);
 
             CMCStorage.IlluminateCompLight = v.IlluminateCompLight;
             CMCStorage.IlluminateTemp = v.IlluminateTemp;
@@ -565,9 +574,58 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
 
         private static double Clamp01(float v) => v < 0f ? 0d : (v > 1f ? 1d : v);
 
-        // UI update
+        
+        private bool IsPowered => _readerRunning && _jsonAccessible;
+
+        private void ApplyPowerGating(bool powered)
+        {
+            // Digits (Verb/Noun/Prog + Registers)
+            var digitsVisibility = powered ? Visibility.Visible : Visibility.Hidden;
+            Verb.Visibility = digitsVisibility;
+            Noun.Visibility = digitsVisibility;
+            Prog.Visibility = digitsVisibility;
+            Register1.Visibility = digitsVisibility;
+            Register2.Visibility = digitsVisibility;
+            Register3.Visibility = digitsVisibility;
+
+            // Annunciators / indicator images
+            var annunciatorVisibility = powered ? Visibility.Visible : Visibility.Hidden;
+            CompActy.Visibility = annunciatorVisibility;
+            Temp.Visibility = annunciatorVisibility;
+            Gimballock.Visibility = annunciatorVisibility;
+            Program.Visibility = annunciatorVisibility;
+            Restart.Visibility = annunciatorVisibility;
+            Tracker.Visibility = annunciatorVisibility;
+            UplinkActy.Visibility = annunciatorVisibility;
+            NoAtt.Visibility = annunciatorVisibility;
+            Stby.Visibility = annunciatorVisibility;
+            KeyRel.Visibility = annunciatorVisibility;
+            OprErr.Visibility = annunciatorVisibility;
+            Alt.Visibility = annunciatorVisibility;
+            Vel.Visibility = annunciatorVisibility;
+
+            // "Unlit" placeholders (keep them in sync too)
+            Unlit1.Visibility = annunciatorVisibility;
+            Unlit2.Visibility = annunciatorVisibility;
+
+            if (!powered)
+            {
+                // Clear digits to avoid showing stale values when powered off.
+                Verb.Content = "";
+                Noun.Content = "";
+                Prog.Content = "";
+                Register1.Content = "";
+                Register2.Content = "";
+                Register3.Content = "";
+            }
+        }
+
+// UI update
         public void UpdateStoredValues()
         {
+            ApplyPowerGating(IsPowered);
+            if (!IsPowered) return;
+
             LmOnlyPanel.Visibility = CMCStorage.IsInCM ? Visibility.Collapsed : Visibility.Visible;
             Verb.Content = CMCStorage.HideVerb ? "" : $"{CMCStorage.VerbD1}{CMCStorage.VerbD2}";
             Noun.Content = CMCStorage.HideNoun ? "" : $"{CMCStorage.NounD1}{CMCStorage.NounD2}";
@@ -624,7 +682,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
 
         private void SetAnnunciator(System.Windows.Controls.Image target, bool illuminated, string name)
         {
-            if (illuminated)
+            if (illuminated && _readerRunning)
             {
                 if (AreWeDarkMode)
                 {
@@ -643,7 +701,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             }
             else
             {
-            target.Source = new BitmapImage(new Uri($"{ImgBase}lights/unlit/{name}.png", UriKind.Absolute));
+                target.Source = new BitmapImage(new Uri($"{ImgBase}lights/unlit/{name}.png", UriKind.Absolute));
             }
         }
 
