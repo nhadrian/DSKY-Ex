@@ -620,11 +620,22 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             }
         }
 
-// UI update
+        // UI update
         public void UpdateStoredValues()
         {
             ApplyPowerGating(IsPowered);
-            if (!IsPowered) return;
+
+            // When power is off, force backlights off and bail out.
+            if (!IsPowered)
+            {
+                if (KeypadBacklightOverlay is not null)
+                    KeypadBacklightOverlay.Opacity = 0.0;
+
+                if (DisplayBacklightOverlay is not null)
+                    DisplayBacklightOverlay.Opacity = 0.0;
+
+                return;
+            }
 
             LmOnlyPanel.Visibility = CMCStorage.IsInCM ? Visibility.Collapsed : Visibility.Visible;
             Verb.Content = CMCStorage.HideVerb ? "" : $"{CMCStorage.VerbD1}{CMCStorage.VerbD2}";
@@ -635,31 +646,44 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             Register2.Content = $"{CMCStorage.Register2Sign}{CMCStorage.Register2D1}{CMCStorage.Register2D2}{CMCStorage.Register2D3}{CMCStorage.Register2D4}{CMCStorage.Register2D5}";
             Register3.Content = $"{CMCStorage.Register3Sign}{CMCStorage.Register3D1}{CMCStorage.Register3D2}{CMCStorage.Register3D3}{CMCStorage.Register3D4}{CMCStorage.Register3D5}";
 
-            //double numericOpacity = Clamp01(CMCStorage.BrightnessNumerics);
-            double numericOpacity = AreWeDarkMode ? 0.7 : 1.0;
-            Verb.Opacity = numericOpacity;
-            Noun.Opacity = numericOpacity;
-            Prog.Opacity = numericOpacity;
+            // Map brightness → opacity:
+            //  Brightness 1.4 ⇒ opacity 0 (no backlight / digits invisible)
+            //  Brightness 0   ⇒ opacity 1 (full intensity)
+            double numericOpacity   = Clamp01(CMCStorage.BrightnessNumerics / 1.4f);
+            double integralOpacity  = Clamp01(CMCStorage.BrightnessIntegral / 1.4f);
+
+            // Digit opacity (BrightnessNumerics)
+            Verb.Opacity      = numericOpacity;
+            Noun.Opacity      = numericOpacity;
+            Prog.Opacity      = numericOpacity;
             Register1.Opacity = numericOpacity;
             Register2.Opacity = numericOpacity;
             Register3.Opacity = numericOpacity;
 
+            // Backlight overlays
+            if (KeypadBacklightOverlay is not null)
+                KeypadBacklightOverlay.Opacity = integralOpacity;     // BrightnessIntegral
+
+            if (DisplayBacklightOverlay is not null)
+                DisplayBacklightOverlay.Opacity = numericOpacity;     // BrightnessNumerics
+
             // COMP ACTY
             CompActy.Visibility = CMCStorage.IlluminateCompLight ? Visibility.Visible : Visibility.Hidden;
+            CompActy.Opacity = numericOpacity;
 
             // Left side annunciators
             SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty");
-            SetAnnunciator(NoAtt, CMCStorage.IlluminateNoAtt > 0, "noatt");
-            SetAnnunciator(Stby, CMCStorage.IlluminateStby > 0, "stby");
-            SetAnnunciator(KeyRel, CMCStorage.IlluminateKeyRel > 0, "keyrel");
-            SetAnnunciator(OprErr, CMCStorage.IlluminateOprErr > 0, "oprerr");
+            SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt");
+            SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby");
+            SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel");
+            SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr");
 
             // Right side annunciators
-            SetAnnunciator(Temp, CMCStorage.IlluminateTemp > 0, "temp");
-            SetAnnunciator(Gimballock, CMCStorage.IlluminateGimbalLock > 0, "gimballock");
-            SetAnnunciator(Program, CMCStorage.IlluminateProg > 0, "prog");
-            SetAnnunciator(Restart, CMCStorage.IlluminateRestart > 0, "restart");
-            SetAnnunciator(Tracker, CMCStorage.IlluminateTracker > 0, "tracker");
+            SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp");
+            SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock");
+            SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog");
+            SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart");
+            SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker");
 
             // LM-only bottom annunciators
             if (!CMCStorage.IsInCM)
@@ -713,6 +737,16 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             var bg = AreWeDarkMode
                 ? new Uri($"{ImgBase}agc-bg-dark.png", UriKind.Absolute)
                 : new Uri($"{ImgBase}agc-bg.png", UriKind.Absolute);
+
+            // Keypad backlight image: normal vs dark
+            if (KeypadBacklightOverlay is not null)
+            {
+                var keypadUri = AreWeDarkMode
+                    ? new Uri($"{ImgBase}keypad_bcklt-dark.png", UriKind.Absolute)
+                    : new Uri($"{ImgBase}keypad_bcklt.png",      UriKind.Absolute);
+
+                KeypadBacklightOverlay.Source = new BitmapImage(keypadUri);
+            }
 
             MainBackgroundImage.Source = new BitmapImage(bg);
 

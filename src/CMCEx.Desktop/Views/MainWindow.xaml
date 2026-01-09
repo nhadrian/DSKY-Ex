@@ -88,6 +88,26 @@
                             IsHitTestVisible="False" />
                      </Border>
 
+                     <!-- Keypad backlight overlay (BrightnessIntegral: 0 → full, 1.4 → none) -->
+                     <Image x:Name="KeypadBacklightOverlay"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/keypad_bcklt.png"
+                            Stretch="Fill"
+                            Panel.ZIndex="2"
+                            IsHitTestVisible="False"
+                            Opacity="0" />
+
+                     <!-- Display backlight overlay (BrightnessNumerics: 0 → full, 1.4 → none) -->
+                     <Image x:Name="DisplayBacklightOverlay"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/display_bcklt.png"
+                            Stretch="Fill"
+                            Panel.ZIndex="3"
+                            IsHitTestVisible="False"
+                            Opacity="0" />
+
                      <!-- Keypad press shadow overlay (shown while any functional HitBox button is pressed) -->
                      <Image x:Name="KeypressShadow" Panel.ZIndex="19"
                             HorizontalAlignment="Left" VerticalAlignment="Top"
