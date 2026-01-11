@@ -650,7 +650,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             double numericOpacity   = 0;
             double integralOpacity  = 0;
 
-            if (!CMCStorage.IsInCM)
+            if (CMCStorage.IsInCM)
             {
                 numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.2, 1.14117646);
                 integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0, 0.9411765);
