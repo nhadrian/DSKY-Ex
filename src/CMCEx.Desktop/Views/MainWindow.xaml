@@ -16,7 +16,7 @@
        Background="Transparent"
        WindowStartupLocation="CenterScreen"
        AllowsTransparency="True"
-       Icon="pack://application:,,,/Assets/AGC.ico"
+       Icon="pack://application:,,,/Assets/DSKY.ico"
        SnapsToDevicePixels="True">
 
        <!-- Borderless resizing support -->
