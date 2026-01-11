@@ -369,7 +369,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
                         _jsonAccessible = false;
                         Dispatcher.Invoke(UpdateJsonReaderPowerIcon);
                                             Dispatcher.Invoke(UpdateStoredValues);
-}
+                    }
                     return;
                 }
 
@@ -647,10 +647,19 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             Register3.Content = $"{CMCStorage.Register3Sign}{CMCStorage.Register3D1}{CMCStorage.Register3D2}{CMCStorage.Register3D3}{CMCStorage.Register3D4}{CMCStorage.Register3D5}";
 
             // Map brightness → opacity:
-            //  Brightness 1.4 ⇒ opacity 0 (no backlight / digits invisible)
-            //  Brightness 0   ⇒ opacity 1 (full intensity)
-            double numericOpacity   = Clamp01(CMCStorage.BrightnessNumerics / 1.4f);
-            double integralOpacity  = Clamp01(CMCStorage.BrightnessIntegral / 1.4f);
+            double numericOpacity   = 0;
+            double integralOpacity  = 0;
+
+            if (!CMCStorage.IsInCM)
+            {
+                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.2, 1.14117646);
+                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0, 0.9411765);
+            }
+            else
+            {
+                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.4, 1.4);
+                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0.4, 1.4);
+            }
 
             // Digit opacity (BrightnessNumerics)
             Verb.Opacity      = numericOpacity;
@@ -702,6 +711,11 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             var blank2 = AreWeDarkMode ? UnlitDarkUri : UnlitBlankUri;
             Unlit1.Source = new BitmapImage(blank2);
             Unlit2.Source = new BitmapImage(blank2);
+        }
+
+        private static double normalizeBrightness(double v, double min, double max)
+        {
+            return (v - min) / (max - min);
         }
 
         private void SetAnnunciator(System.Windows.Controls.Image target, bool illuminated, string name)
