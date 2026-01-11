@@ -129,57 +129,99 @@
                      <Label x:Name="Register3" Content="" Margin="401,403,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                             Foreground="#FF03A95A" FontSize="56" FontFamily="pack://application:,,,/Assets/Fonts/#Zerlina" Width="217" Panel.ZIndex="5"/>
 
-                     <!-- Annunciator images -->
+                     <!-- Annunciator lit images -->
                      <Image x:Name="CompActy" Visibility="Hidden" Height="91" Width="91" Stretch="Fill" 
                             Margin="398,51,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                             Source="pack://application:,,,/Assets/Images/lights/lit/compacty.png"
                             Panel.ZIndex="3" IsHitTestVisible="False"/>
 
                      <Image x:Name="Temp" Height="50" Width="106" Stretch="Fill" Margin="188,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/temp.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/temp.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="Gimballock" Height="50" Width="106" Stretch="Fill" Margin="188,108,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/gimballock.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/gimballock.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="Program" Height="50" Width="106" Stretch="Fill" Margin="188,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/prog.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/prog.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="Restart" Height="50" Width="106" Stretch="Fill" Margin="188,228,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/restart.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/restart.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="Tracker" Height="50" Width="106" Stretch="Fill" Margin="188,290,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/tracker.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/tracker.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
 
                      <Image x:Name="UplinkActy" Height="50" Width="106" Stretch="Fill" Margin="75,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/uplinkacty.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/uplinkacty.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="NoAtt" Height="50" Width="106" Stretch="Fill" Margin="75,108,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/noatt.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/noatt.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="Stby" Height="50" Width="106" Stretch="Fill" Margin="75,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/stby.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/stby.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="KeyRel" Height="50" Width="106" Stretch="Fill" Margin="75,228,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/keyrel.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/keyrel.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
                      <Image x:Name="OprErr" Height="50" Width="106" Stretch="Fill" Margin="75,290,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            Source="pack://application:,,,/Assets/Images/lights/unlit/oprerr.png"
+                            Source="pack://application:,,,/Assets/Images/lights/lit/oprerr.png"
                             Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
 
-                     <Grid x:Name="LmOnlyPanel" Visibility="Collapsed">
+                     <Grid x:Name="LmOnlyPanel" Visibility="Collapsed" Panel.ZIndex="3">
                             <Image x:Name="Alt" Height="50" Width="106" Stretch="Fill" Margin="188,351,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                   Source="pack://application:,,,/Assets/Images/lights/unlit/alt.png"
-                                   Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
+                                   Source="pack://application:,,,/Assets/Images/lights/lit/alt.png"
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
                             <Image x:Name="Vel" Height="50" Width="106" Stretch="Fill" Margin="188,412,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   Source="pack://application:,,,/Assets/Images/lights/lit/vel.png"
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
+                     </Grid>
+
+                     <!-- Annunciator background images -->
+                     <Image x:Name="TempBack" Height="50" Width="106" Stretch="Fill" Margin="188,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/temp.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="GimballockBack" Height="50" Width="106" Stretch="Fill" Margin="188,108,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/gimballock.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="ProgramBack" Height="50" Width="106" Stretch="Fill" Margin="188,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/prog.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="RestartBack" Height="50" Width="106" Stretch="Fill" Margin="188,228,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/restart.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="TrackerBack" Height="50" Width="106" Stretch="Fill" Margin="188,290,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/tracker.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+
+                     <Image x:Name="UplinkActyBack" Height="50" Width="106" Stretch="Fill" Margin="75,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/uplinkacty.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="NoAttBack" Height="50" Width="106" Stretch="Fill" Margin="75,108,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/noatt.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="StbyBack" Height="50" Width="106" Stretch="Fill" Margin="75,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/stby.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="KeyRelBack" Height="50" Width="106" Stretch="Fill" Margin="75,228,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/keyrel.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+                     <Image x:Name="OprErrBack" Height="50" Width="106" Stretch="Fill" Margin="75,290,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Source="pack://application:,,,/Assets/Images/lights/unlit/oprerr.png"
+                            Panel.ZIndex="2" IsHitTestVisible="False" Visibility="Collapsed"/>
+
+                     <Grid x:Name="LmOnlyPanelBack" Visibility="Collapsed" Panel.ZIndex="2">
+                            <Image x:Name="AltBack" Height="50" Width="106" Stretch="Fill" Margin="188,351,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                   Source="pack://application:,,,/Assets/Images/lights/unlit/alt.png"
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
+                            <Image x:Name="VelBack" Height="50" Width="106" Stretch="Fill" Margin="188,412,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                    Source="pack://application:,,,/Assets/Images/lights/unlit/vel.png"
-                                   Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
                             <Image x:Name="Unlit1" Height="50" Width="106" Stretch="Fill" Margin="75,351,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                    Source="pack://application:,,,/Assets/Images/lights/unlit/unlit.png"
-                                   Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
                             <Image x:Name="Unlit2" Height="50" Width="106" Stretch="Fill" Margin="75,412,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                    Source="pack://application:,,,/Assets/Images/lights/unlit/unlit.png"
-                                   Panel.ZIndex="3" IsHitTestVisible="False" Visibility="Collapsed"/>
+                                   IsHitTestVisible="False" Visibility="Collapsed"/>
                      </Grid>
 
                      <!-- Hitbox buttons (ON TOP of everything) -->

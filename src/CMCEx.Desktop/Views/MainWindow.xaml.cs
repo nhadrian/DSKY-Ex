@@ -574,7 +574,6 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
 
         private static double Clamp01(float v) => v < 0f ? 0d : (v > 1f ? 1d : v);
 
-        
         private bool IsPowered => _readerRunning && _jsonAccessible;
 
         private void ApplyPowerGating(bool powered)
@@ -588,7 +587,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             Register2.Visibility = digitsVisibility;
             Register3.Visibility = digitsVisibility;
 
-            // Annunciators / indicator images
+            // Annunciators / indicator lit images
             var annunciatorVisibility = powered ? Visibility.Visible : Visibility.Hidden;
             CompActy.Visibility = annunciatorVisibility;
             Temp.Visibility = annunciatorVisibility;
@@ -604,7 +603,19 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             Alt.Visibility = annunciatorVisibility;
             Vel.Visibility = annunciatorVisibility;
 
-            // "Unlit" placeholders (keep them in sync too)
+            // Annunciators / indicator background images
+            TempBack.Visibility = annunciatorVisibility;
+            GimballockBack.Visibility = annunciatorVisibility;
+            ProgramBack.Visibility = annunciatorVisibility;
+            RestartBack.Visibility = annunciatorVisibility;
+            TrackerBack.Visibility = annunciatorVisibility;
+            UplinkActyBack.Visibility = annunciatorVisibility;
+            NoAttBack.Visibility = annunciatorVisibility;
+            StbyBack.Visibility = annunciatorVisibility;
+            KeyRelBack.Visibility = annunciatorVisibility;
+            OprErrBack.Visibility = annunciatorVisibility;
+            AltBack.Visibility = annunciatorVisibility;
+            VelBack.Visibility = annunciatorVisibility;
             Unlit1.Visibility = annunciatorVisibility;
             Unlit2.Visibility = annunciatorVisibility;
 
@@ -638,6 +649,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             }
 
             LmOnlyPanel.Visibility = CMCStorage.IsInCM ? Visibility.Collapsed : Visibility.Visible;
+            LmOnlyPanelBack.Visibility = CMCStorage.IsInCM ? Visibility.Collapsed : Visibility.Visible;
             Verb.Content = CMCStorage.HideVerb ? "" : $"{CMCStorage.VerbD1}{CMCStorage.VerbD2}";
             Noun.Content = CMCStorage.HideNoun ? "" : $"{CMCStorage.NounD1}{CMCStorage.NounD2}";
             Prog.Content = $"{CMCStorage.ProgramD1}{CMCStorage.ProgramD2}";
@@ -646,7 +658,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             Register2.Content = $"{CMCStorage.Register2Sign}{CMCStorage.Register2D1}{CMCStorage.Register2D2}{CMCStorage.Register2D3}{CMCStorage.Register2D4}{CMCStorage.Register2D5}";
             Register3.Content = $"{CMCStorage.Register3Sign}{CMCStorage.Register3D1}{CMCStorage.Register3D2}{CMCStorage.Register3D3}{CMCStorage.Register3D4}{CMCStorage.Register3D5}";
 
-            // Map brightness → opacity:
+            // Map brightness --> opacity:
             double numericOpacity   = 0;
             double integralOpacity  = 0;
 
@@ -680,37 +692,44 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             CompActy.Visibility = CMCStorage.IlluminateCompLight ? Visibility.Visible : Visibility.Hidden;
             CompActy.Opacity = numericOpacity;
 
-            // Left side annunciators
-            SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty");
-            SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt");
-            SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby");
-            SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel");
-            SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr");
+            // Left side annunciators lit image
+            SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty", numericOpacity);
+            SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt", numericOpacity);
+            SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby", numericOpacity);
+            SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel", numericOpacity);
+            SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr", numericOpacity);
 
-            // Right side annunciators
-            SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp");
-            SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock");
-            SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog");
-            SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart");
-            SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker");
+            // Right side annunciators lit image
+            SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp", numericOpacity);
+            SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock", numericOpacity);
+            SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog", numericOpacity);
+            SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart", numericOpacity);
+            SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker", numericOpacity);
 
-            // LM-only bottom annunciators
+            // LM-only bottom annunciators lit image
             if (!CMCStorage.IsInCM)
             {
-                SetAnnunciator(Alt, CMCStorage.IlluminateAlt > 0, "alt");
-                SetAnnunciator(Vel, CMCStorage.IlluminateVel > 0, "vel");
-            }
-            else
-            {
-                var blank = AreWeDarkMode ? UnlitDarkUri : UnlitBlankUri;
-                Alt.Source = new BitmapImage(blank);
-                Vel.Source = new BitmapImage(blank);
+                SetAnnunciator(Alt, CMCStorage.IlluminateAlt > 0, "alt", numericOpacity);
+                SetAnnunciator(Vel, CMCStorage.IlluminateVel > 0, "vel", numericOpacity);
             }
 
-            // Still blank placeholders
-            var blank2 = AreWeDarkMode ? UnlitDarkUri : UnlitBlankUri;
-            Unlit1.Source = new BitmapImage(blank2);
-            Unlit2.Source = new BitmapImage(blank2);
+            // Left side annunciators background image
+            SetAnnunciatorBackground(UplinkActyBack, "uplinkacty");
+            SetAnnunciatorBackground(NoAttBack,      "noatt");
+            SetAnnunciatorBackground(StbyBack,       "stby");
+            SetAnnunciatorBackground(KeyRelBack,     "keyrel");
+            SetAnnunciatorBackground(OprErrBack,     "oprerr");
+            SetAnnunciatorBackground(Unlit1, "unlit");
+            SetAnnunciatorBackground(Unlit2, "unlit");
+
+            // Right side annunciators background image
+            SetAnnunciatorBackground(TempBack,      "temp");
+            SetAnnunciatorBackground(GimballockBack,"gimballock");
+            SetAnnunciatorBackground(ProgramBack,   "prog");
+            SetAnnunciatorBackground(RestartBack,   "restart");
+            SetAnnunciatorBackground(TrackerBack,   "tracker");
+            SetAnnunciatorBackground(AltBack, "alt");
+            SetAnnunciatorBackground(VelBack, "vel");
         }
 
         private static double normalizeBrightness(double v, double min, double max)
@@ -718,7 +737,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             return (v - min) / (max - min);
         }
 
-        private void SetAnnunciator(System.Windows.Controls.Image target, bool illuminated, string name)
+        private void SetAnnunciator(System.Windows.Controls.Image target, bool illuminated, string name, double opacity)
         {
             if (illuminated && _readerRunning)
             {
@@ -730,9 +749,14 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
                 {
                     target.Source = new BitmapImage(new Uri($"{ImgBase}lights/lit/{name}.png", UriKind.Absolute));
                 }
+                target.Opacity = opacity;
                 return;
             }
+            target.Opacity = 0;
+        }
 
+        private void SetAnnunciatorBackground(System.Windows.Controls.Image target, string name)
+        {
             if (AreWeDarkMode)
             {
                 target.Source = new BitmapImage(new Uri($"{ImgBase}lights/unlit/dark/{name}.png", UriKind.Absolute));
