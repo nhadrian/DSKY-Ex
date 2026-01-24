@@ -389,7 +389,7 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
                catch (Exception)
             {
 #if DEBUG
-                Debug.WriteLine(ex);
+//                Debug.WriteLine(ex);
 #endif
             }
         }
@@ -664,13 +664,16 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
 
             if (CMCStorage.IsInCM)
             {
-                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.2, 1.14117646);
-                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0, 0.9411765);
+                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.0, 1.14117646);
+                //numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.2, 1.14117646);
+                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0.0, 0.9411765);
             }
             else
             {
-                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.4, 1.4);
-                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0.4, 1.4);
+                numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.2, 1.4);
+                //numericOpacity   = normalizeBrightness(CMCStorage.BrightnessNumerics, 0.4, 1.4);
+                integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0.2, 1.4);
+                //integralOpacity  = normalizeBrightness(CMCStorage.BrightnessIntegral, 0.4, 1.4);
             }
 
             // Digit opacity (BrightnessNumerics)
@@ -692,23 +695,38 @@ namespace CMC // keep this namespace if your XAML is still x:Class="CMC.MainWind
             CompActy.Visibility = CMCStorage.IlluminateCompLight ? Visibility.Visible : Visibility.Hidden;
             CompActy.Opacity = numericOpacity;
 
-            // Left side annunciators lit image
-            SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty", numericOpacity);
-            SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt", numericOpacity);
-            SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby", numericOpacity);
-            SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel", numericOpacity);
-            SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr", numericOpacity);
-
-            // Right side annunciators lit image
-            SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp", numericOpacity);
-            SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock", numericOpacity);
-            SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog", numericOpacity);
-            SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart", numericOpacity);
-            SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker", numericOpacity);
-
             // LM-only bottom annunciators lit image
-            if (!CMCStorage.IsInCM)
+            if (CMCStorage.IsInCM)
             {
+                // Left side annunciators lit image
+                SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty", integralOpacity);
+                SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt", integralOpacity);
+                SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby", integralOpacity);
+                SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel", integralOpacity);
+                SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr", integralOpacity);
+
+                // Right side annunciators lit image
+                SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp", integralOpacity);
+                SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock", integralOpacity);
+                SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog", integralOpacity);
+                SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart", integralOpacity);
+                SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker", integralOpacity);
+            }
+            else
+            {
+                // Left side annunciators lit image
+                SetAnnunciator(UplinkActy, CMCStorage.IlluminateUplinkActy > 0, "uplinkacty", numericOpacity);
+                SetAnnunciator(NoAtt,      CMCStorage.IlluminateNoAtt > 0, "noatt", numericOpacity);
+                SetAnnunciator(Stby,       CMCStorage.IlluminateStby > 0, "stby", numericOpacity);
+                SetAnnunciator(KeyRel,     CMCStorage.IlluminateKeyRel > 0, "keyrel", numericOpacity);
+                SetAnnunciator(OprErr,     CMCStorage.IlluminateOprErr > 0, "oprerr", numericOpacity);
+
+                // Right side annunciators lit image
+                SetAnnunciator(Temp,      CMCStorage.IlluminateTemp > 0,       "temp", numericOpacity);
+                SetAnnunciator(Gimballock,CMCStorage.IlluminateGimbalLock > 0, "gimballock", numericOpacity);
+                SetAnnunciator(Program,   CMCStorage.IlluminateProg > 0,       "prog", numericOpacity);
+                SetAnnunciator(Restart,   CMCStorage.IlluminateRestart > 0,    "restart", numericOpacity);
+                SetAnnunciator(Tracker,   CMCStorage.IlluminateTracker > 0,    "tracker", numericOpacity);
                 SetAnnunciator(Alt, CMCStorage.IlluminateAlt > 0, "alt", numericOpacity);
                 SetAnnunciator(Vel, CMCStorage.IlluminateVel > 0, "vel", numericOpacity);
             }
